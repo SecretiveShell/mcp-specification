@@ -783,6 +783,10 @@ export interface CreateMessageRequest extends Request {
      * Optional metadata to pass through to the LLM provider. The format of this metadata is provider-specific.
      */
     metadata?: object;
+    /**
+     * Optional tools to use for sampling calls.
+     */
+    tools?: Tool[];
   };
 }
 
@@ -797,7 +801,23 @@ export interface CreateMessageResult extends Result, SamplingMessage {
   /**
    * The reason why sampling stopped, if known.
    */
-  stopReason?: "endTurn" | "stopSequence" | "maxTokens" | string;
+  stopReason?: "endTurn" | "stopSequence" | "maxTokens" | "ToolCalls" | string;
+  /**
+   * The tool calls that were made during sampling.
+   */
+  tools?: ToolCall[];
+}
+
+export interface ToolCall {
+  /**
+   * The name of the tool that was called.
+   */
+  name: string;
+  /**
+   * Json string of the arguments that were passed to the tool.
+   * This MUST match the tool call schema from createMessageRequest.tools
+   */
+  arguments: string;
 }
 
 /**

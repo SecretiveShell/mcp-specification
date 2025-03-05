@@ -424,6 +424,13 @@
                         },
                         "temperature": {
                             "type": "number"
+                        },
+                        "tools": {
+                            "description": "Optional tools to use for sampling calls.",
+                            "items": {
+                                "$ref": "#/definitions/Tool"
+                            },
+                            "type": "array"
                         }
                     },
                     "required": [
@@ -470,6 +477,13 @@
                 "stopReason": {
                     "description": "The reason why sampling stopped, if known.",
                     "type": "string"
+                },
+                "tools": {
+                    "description": "The tool calls that were made during sampling.",
+                    "items": {
+                        "$ref": "#/definitions/ToolCall"
+                    },
+                    "type": "array"
                 }
             },
             "required": [
@@ -2061,6 +2075,23 @@
             },
             "required": [
                 "inputSchema",
+                "name"
+            ],
+            "type": "object"
+        },
+        "ToolCall": {
+            "properties": {
+                "arguments": {
+                    "description": "Json string of the arguments that were passed to the tool.\nThis MUST match the tool call schema from createMessageRequest.tools",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "The name of the tool that was called.",
+                    "type": "string"
+                }
+            },
+            "required": [
+                "arguments",
                 "name"
             ],
             "type": "object"
