@@ -128,6 +128,82 @@ sequenceDiagram
     Client-->>Server: Return approved response
 ```
 
+## Tool Calling
+
+### Message
+
+To add tools to a sampling request, include them in the `tools` array:
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "sampling/createMessage",
+  "params": {
+    "messages": [
+      {
+        "role": "user",
+        "content": {
+          "type": "text",
+          "text": "Calculate 3 + 5"
+        }
+      }
+    ],
+    "modelPreferences": {
+      "hints": [
+        {
+          "name": "claude-3-sonnet"
+        }
+      ],
+      "intelligencePriority": 0.8,
+      "speedPriority": 0.5
+    },
+    "systemPrompt": "You are a helpful assistant.",
+    "maxTokens": 100,
+    "tools": [
+      {
+        "name": "calculator",
+        "description": "perform mathematical calculations",
+        "InputSchema": {
+          "properties": {
+            "a": { "title": "A", "type": "integer" },
+            "b": { "title": "B", "type": "integer" },
+            "operator": {
+              "enum": ["+", "-", "*", "/"],
+              "title": "Operator",
+              "type": "string"
+            }
+          },
+          "required": ["a", "b", "operator"],
+          "title": "CalculatorArgs",
+          "type": "object"
+        }
+      }
+    ]
+  }
+}
+```
+
+### Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "model": "gpt-4o-mini",
+    "role": "assistant",
+    "stopReason": "toolCalls",
+    "tools": [
+      {
+        "arguments": "{\"a\":3,\"b\":5,\"operator\":\"+\"}",
+        "name": "calculator"
+      }
+    ]
+  }
+}
+```
+
 ## Data Types
 
 ### Messages
